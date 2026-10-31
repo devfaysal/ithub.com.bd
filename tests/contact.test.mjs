@@ -1,7 +1,7 @@
 import { test, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { onRequest as submit } from '../functions/api/contact.js';
-import { onRequest as configure } from '../functions/api/contact-config.js';
+import { handleContact as submit } from '../lib/contact-submit.mjs';
+import { handleContactConfig as configure } from '../lib/contact-config.mjs';
 import { BODY_LIMIT } from '../lib/contact.mjs';
 
 const env = {

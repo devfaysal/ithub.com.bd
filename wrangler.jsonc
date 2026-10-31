@@ -1,5 +1,12 @@
 {
   "name": "ithub",
-  "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-10-30"
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-10-31",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  }
 }

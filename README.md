@@ -1,62 +1,61 @@
 # ITHub website
 
-Plain HTML, CSS, and vanilla JavaScript, with a Cloudflare Pages Function for contact enquiries. No framework, runtime packages, database, or bundler is required.
+Plain HTML, CSS, and vanilla JavaScript, deployed with **Cloudflare Workers + Static Assets**. A small Worker handles contact enquiries. No framework, runtime packages, database, or bundler setup is required.
 
-## Prepare the public directory
+## Cloudflare dashboard setup
 
-```sh
-node scripts/prepare-deploy.mjs
-```
+Connect the Git repository through the current **Workers** workflow. Set the Worker name to `ithub`, matching `wrangler.jsonc`.
 
-This copies only public website files into `dist/`. It does not compile or transform the website. Functions, tests, documentation, and local secrets stay outside the public directory. Do not deploy or serve the repository root when using local secrets.
+| Dashboard field | Value |
+| --- | --- |
+| Build command | `node scripts/prepare-deploy.mjs` |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | Repository root; leave the default value |
+
+There is no Output directory field to fill in. `wrangler.jsonc` declares `assets.directory` as `./dist` and `worker/index.mjs` as the Worker entry point.
+
+The build command only copies public files into `dist/`; it does not compile or transform the HTML, CSS, or JavaScript. Worker code, tests, documentation, and local secrets stay outside the public directory. Do not serve or upload the repository root as static assets.
+
+This project uses Workers directly. Do not choose the legacy Pages workflow or use `wrangler pages` commands.
 
 ## Configure direct email delivery
 
 The form uses Resend for delivery and Cloudflare Turnstile for spam protection.
 
-1. In Resend, verify the sending domain or subdomain and add its required DNS records. `notify.ithub.com.bd` is a suggested sending subdomain; use the domain you actually verify.
+1. In Resend, verify `notify.ithub.com.bd` and wait for the sending DNS records to be verified.
 2. Create a Resend API key with sending access to that domain.
-3. Create a Turnstile widget and allow your production website hostname. Add the exact Pages preview hostname too if you intend to test there. Keep hostname validation enabled.
-4. In the Cloudflare Pages project, go to **Settings → Variables and Secrets → Add** and add the following five entries. They can all be encrypted Secrets, keeping the configuration out of the source repository. Configure Production and Preview separately as needed.
+3. Create a Managed Turnstile widget and allow `ithub.com.bd`. Also allow the exact `workers.dev` hostname if you will test on the Worker URL. Keep hostname validation enabled.
+4. In the Cloudflare **Worker**, go to **Settings → Variables and Secrets** and add the five entries below. They can all be encrypted Secrets. These must be runtime settings; build-only secrets are not available to the deployed contact handler.
 
 | Name | Value |
 | --- | --- |
 | `RESEND_API_KEY` | Your Resend sending API key |
-| `CONTACT_FROM` | For example, `ITHub Website <website@notify.ithub.com.bd>`; the domain must be verified in Resend |
+| `CONTACT_FROM` | `ITHub Website <website@notify.ithub.com.bd>` |
 | `CONTACT_TO` | `ithub.com.bd@gmail.com`, or your preferred receiving address |
 | `TURNSTILE_SITE_KEY` | Your widget's public site key |
 | `TURNSTILE_SECRET_KEY` | Your widget's secret key |
 
-5. Redeploy after adding or changing configuration.
-6. Once DNS is verified, send a real enquiry from the deployed contact page. Check receipt in the destination inbox and check that Reply addresses the visitor.
+5. Save and deploy the configuration changes. Retry the deployment if you added configuration after its first build.
+6. Send a real enquiry from the deployed contact page. Confirm receipt in the destination inbox and check that Reply addresses the visitor.
 
 The public site key is returned by `/api/contact-config`; no API key or secret key is returned to the browser. Without complete configuration, the form shows its email and WhatsApp fallback links and does not attempt delivery. Public deployments reject Cloudflare's dummy test keys.
 
 The sender address uses your verified domain. The visitor's email is set as Reply-To. Sending a notification does not require a mailbox at the sender address, and the receiving mailbox can remain on Gmail.
 
-## Deploy to Cloudflare Pages
+## Deploy from the command line
 
-Use **Git integration** or **Wrangler**. Dashboard drag-and-drop uploads do not deploy Pages Functions.
-
-For Git integration:
-
-- Framework preset: **None**
-- Build command: `node scripts/prepare-deploy.mjs`
-- Build output directory: `dist`
-- Project root: this repository
-
-For a CLI deployment, run from the repository root:
+Run from the repository root:
 
 ```sh
 node scripts/prepare-deploy.mjs
-npx wrangler@4 pages deploy dist --project-name ithub
+npx wrangler deploy
 ```
 
-The example project name is `ithub`; change `wrangler.jsonc` and the CLI argument if your Cloudflare Pages project has a different name. The `functions/` directory remains at the repository root and is bundled by Cloudflare separately from `dist/`.
+The example Worker name is `ithub`; change `wrangler.jsonc` if your Cloudflare Worker has a different name.
 
-`_routes.json` limits Function invocations to `/api/contact` and `/api/contact-config`. The website's HTML, CSS, JavaScript, and images continue to be served as static assets.
+Cloudflare serves matching static assets directly. Only `/api/*` is configured to run the Worker before asset lookup. Unknown API paths return JSON 404s. Missing website pages use the custom `404.html`. Directory pages keep their trailing-slash URLs.
 
-Configure `ithub.com.bd` as the custom domain after reviewing the Pages preview. Canonical URLs, the sitemap, and robots.txt use `https://ithub.com.bd`. `_headers` configures security headers and permits the Turnstile script and iframe. `_redirects` maps the old WordPress service URLs to the new service sections. Check for additional old URLs before switching the production domain.
+Configure `ithub.com.bd` as a Worker custom domain after reviewing the deployment. Canonical URLs, the sitemap, and robots.txt use `https://ithub.com.bd`. `_headers` sets security headers and permits the Turnstile script and iframe. `_redirects` maps the old WordPress service URLs to the new service sections. Both files are supported by Workers Static Assets and included in `dist/`; `.assetsignore` keeps them from being publicly downloadable. Check for additional old URLs before switching the production domain.
 
 ## Preview locally
 
@@ -64,12 +63,12 @@ For a full preview using Cloudflare's runtime:
 
 ```sh
 node scripts/prepare-deploy.mjs
-npx wrangler@4 pages dev dist --ip 127.0.0.1 --port 8080
+npx wrangler dev --ip 127.0.0.1 --port 8080
 ```
 
 Open `http://localhost:8080`. To test delivery locally, copy `.dev.vars.example` to `.dev.vars` and add your values there. Local secret files are ignored by Git and excluded from `dist/`. Never paste API keys into HTML or browser JavaScript. No local secret file is provided by default.
 
-Cloudflare's official dummy Turnstile keys can be used on localhost for verification testing. Real email sending still requires a valid Resend key, a verified sender, and a recipient. Any local test with real Resend credentials can send an actual email.
+Cloudflare's official dummy Turnstile keys can be used on localhost for verification testing. Real email sending still requires a valid Resend key, a verified sender, and a recipient. A local test with real Resend credentials can send an actual email.
 
 For a static-only preview, serve **dist**, not the repository root:
 
@@ -77,18 +76,20 @@ For a static-only preview, serve **dist**, not the repository root:
 python3 -m http.server 8080 --bind 127.0.0.1 --directory dist
 ```
 
-Static-only preview does not run the API. The contact form will show its fallback options. `_headers`, `_redirects`, and Cloudflare's 404 handling are not applied by Python's server.
+Static-only preview does not run the API. The contact form will show its fallback options. Security headers, redirects, and Cloudflare's 404 handling are not applied by Python's server.
 
 ## Checks
 
 ```sh
 node tests/contact.test.mjs
+node tests/worker.test.mjs
 node --check assets/contact.js
 node --check assets/main.js
-npx wrangler@4 pages functions build --outdir /tmp/ithub-functions-check
+node scripts/prepare-deploy.mjs
+npx wrangler deploy --dry-run --outdir /tmp/ithub-worker-check
 ```
 
-The backend tests mock the verification and email services. They send no real email. A real delivery check after domain verification is still needed.
+The backend tests mock the verification and email services. They send no real email. The dry run compiles and validates the deployment without publishing it. A real delivery check after domain verification and credential setup is still needed.
 
 ## Edit the site
 
@@ -96,7 +97,8 @@ The backend tests mock the verification and email services. They send no real em
 - Shared styles: `assets/styles.css`.
 - Navigation, workflow tabs, and product filters: `assets/main.js`.
 - Direct-send form behaviour: `assets/contact.js`.
-- Contact endpoints: `functions/api/contact.js` and `functions/api/contact-config.js`.
+- Worker routing: `worker/index.mjs`.
+- Contact handlers: `lib/contact-submit.mjs` and `lib/contact-config.mjs`.
 - Server-side validation and helpers: `lib/contact.mjs`.
 - Optimised images and logo variants: `assets/images/`.
 - The primary logo is `ithub-logo.svg`; dark-background and monochrome variants use `-dark` and `-mono`. The compact mark is `ithub-icon.svg`. Transparent PNG exports are included. The previous logo remains in `ithub-logo.webp`.
