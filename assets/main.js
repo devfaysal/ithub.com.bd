@@ -1,5 +1,3 @@
-document.documentElement.classList.add('js');
-
 const menuToggle = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#site-navigation');
 

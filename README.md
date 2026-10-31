@@ -96,6 +96,7 @@ The backend tests mock the verification and email services. They send no real em
 - Each page is an ordinary `index.html` in its own directory.
 - Shared styles: `assets/styles.css`.
 - Navigation, workflow tabs, and product filters: `assets/main.js`.
+- A small script in each page's head sets the mobile menu's initial collapsed state before rendering. Its exact SHA-256 hash is permitted in `_headers`; update that hash if you change the head script.
 - Direct-send form behaviour: `assets/contact.js`.
 - Worker routing: `worker/index.mjs`.
 - Contact handlers: `lib/contact-submit.mjs` and `lib/contact-config.mjs`.
