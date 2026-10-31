@@ -101,7 +101,7 @@ The backend tests mock the verification and email services. They send no real em
 - Contact handlers: `lib/contact-submit.mjs` and `lib/contact-config.mjs`.
 - Server-side validation and helpers: `lib/contact.mjs`.
 - Optimised images and logo variants: `assets/images/`.
-- The primary logo is `ithub-logo.svg`; dark-background and monochrome variants use `-dark` and `-mono`. The compact mark is `ithub-icon.svg`. Transparent PNG exports are included. The previous logo remains in `ithub-logo.webp`.
+- The primary logo is `ithub-logo.svg`; dark-background and monochrome variants use `-dark` and `-mono`. The compact mark is `ithub-icon.svg`. Transparent PNG exports are included.
 - Navigation and footer markup are repeated in the HTML files. Update all pages when changing shared links.
 - Update `sitemap.xml` when adding or removing pages, then rerun the public-directory preparation command before deploying.
 
