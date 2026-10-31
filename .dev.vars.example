@@ -1,0 +1,7 @@
+# Copy to .dev.vars for local Wrangler development. Use real values only locally
+# or in Cloudflare's encrypted dashboard secrets. This example sends no email.
+RESEND_API_KEY=
+CONTACT_FROM="ITHub Website <website@notify.ithub.com.bd>"
+CONTACT_TO="ithub.com.bd@gmail.com"
+TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=

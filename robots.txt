@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ithub.com.bd/sitemap.xml

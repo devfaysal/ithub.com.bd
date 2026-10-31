@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">ITHub IT monogram</title>
+  <g transform="translate(1)">
+    <path fill="#215bf0" d="M21 1.2Q23 .1 25 1.2L42 11Q44 12.2 44 14.5V33.5Q44 35.8 42 37L25 46.8Q23 47.9 21 46.8L4 37Q2 35.8 2 33.5V14.5Q2 12.2 4 11Z"/>
+    <path fill="#fff" d="M11 15h4.5v18H11zm9 0h16v4.2h-5.75V33h-4.5V19.2H20z"/>
+  </g>
+</svg>
