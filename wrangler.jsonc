@@ -8,5 +8,10 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
     "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "CONTACT_FROM": "ITHub Website <website@notify.ithub.com.bd>",
+    "CONTACT_TO": "ithub.com.bd@gmail.com",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFtiLcH0Oy2JWhAu"
   }
 }
