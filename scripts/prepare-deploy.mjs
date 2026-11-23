@@ -7,7 +7,7 @@ const output = join(root, 'dist');
 const publicFiles = [
   'index.html', '404.html', '_headers', '_redirects', '.assetsignore',
   'robots.txt', 'sitemap.xml', 'assets', 'about', 'contact', 'privacy',
-  'products', 'services',
+  'products', 'services', 'apps',
 ];
 
 await rm(output, { recursive: true, force: true });

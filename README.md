@@ -117,3 +117,11 @@ Failures preserve the visitor's entries, allow a fresh verification, and show di
 CampusControl is labelled **Early access**. Masjid Management and Amar Pirijpur are labelled **In development**. Add public URLs for the latter two when confirmed.
 
 The CampusControl dashboard image comes from its public website and contains demonstration data. Other product artwork is illustrative. This website adds no advertising analytics.
+
+## App privacy policies
+
+App-specific policies live at `/apps/<app-name>/privacy-policy/`, separately from the website's `/privacy/` notice. Salat's page is `apps/salat/privacy-policy/index.html`, with the canonical URL `https://ithub.com.bd/apps/salat/privacy-policy/`. The website privacy notice links to it.
+
+The Salat policy describes the inspected Android source for `bd.com.ithub.salat`: offline timetables, manually selected districts, local calculation preferences, no requested permissions or advertising/analytics SDKs, and disabled backup/transfer. Review the policy whenever the app's permissions, dependencies, or data handling change. Add its public URL to Play Console and provide access to the policy inside the Android app; creating this website page does not add an in-app link.
+
+For each additional app, create its own directory and policy, link it from `/privacy/`, and add its canonical URL to `sitemap.xml`. The deployment preparation script includes the entire `apps/` directory. Build and deploy the website before submitting a new policy URL to Google Play.
