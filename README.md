@@ -125,3 +125,5 @@ App-specific policies live at `/apps/<app-name>/privacy-policy/`, separately fro
 The Salat policy describes the inspected Android source for `bd.com.ithub.salat`: offline timetables, manually selected districts, local calculation preferences, no requested permissions or advertising/analytics SDKs, and disabled backup/transfer. Review the policy whenever the app's permissions, dependencies, or data handling change. Add its public URL to Play Console and provide access to the policy inside the Android app; creating this website page does not add an in-app link.
 
 For each additional app, create its own directory and policy, link it from `/privacy/`, and add its canonical URL to `sitemap.xml`. The deployment preparation script includes the entire `apps/` directory. Build and deploy the website before submitting a new policy URL to Google Play.
+
+Names (নাম শিখি, `bd.com.ithub.names`) privacy policy: `apps/names/privacy-policy/index.html`, canonical URL `https://ithub.com.bd/apps/names/privacy-policy/`.
